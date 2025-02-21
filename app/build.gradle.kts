@@ -17,6 +17,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -39,7 +42,16 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
@@ -49,6 +61,9 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.androidx.compose.navigation)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
@@ -66,11 +81,6 @@ dependencies {
     kapt(platform(libs.androidx.room.compiler))
     //Coil
     implementation(libs.coil.compose)
-
-
-
-
-
 
 
     implementation(libs.androidx.core.ktx)
