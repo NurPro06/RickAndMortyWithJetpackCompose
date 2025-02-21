@@ -25,7 +25,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.rememberAsyncImagePainter
 import kg.geeks.rickandmortywithjetpackcompose.data.dto.location.LocationResponseDto
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable

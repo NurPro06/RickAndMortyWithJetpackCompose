@@ -56,7 +56,8 @@ fun EpisodeScreen(
             when {
                 episodes.loadState.append is LoadState.Loading -> {
                     item {
-                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Box(modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center) {
                             CircularProgressIndicator()
                         }
                     }

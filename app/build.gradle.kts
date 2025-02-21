@@ -45,9 +45,7 @@ android {
         buildConfig = true
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -57,10 +55,8 @@ android {
 
 dependencies {
     //Koin
-    implementation(libs.koin.compose)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.androidx.compose.navigation)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
