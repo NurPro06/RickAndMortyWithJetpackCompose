@@ -46,7 +46,7 @@ private fun provideOkHttpClient(): OkHttpClient {
 
 private fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL) // Используем BuildConfig.BASE_URL
+        .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()

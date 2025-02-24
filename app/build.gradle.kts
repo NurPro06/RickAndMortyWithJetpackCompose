@@ -50,7 +50,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "2.0.0" // Совместимо с Kotlin 2.0.0
+        kotlinCompilerExtensionVersion = "2.0.0"
     }
 
     packaging {

@@ -9,7 +9,6 @@ import androidx.paging.cachedIn
 import kg.geeks.rickandmortywithjetpackcompose.data.local.FavoriteCharacterEntity
 import kg.geeks.rickandmortywithjetpackcompose.data.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
-
 class CharactersViewModel(
     private val repository: CharacterRepository
 ) : ViewModel() {
