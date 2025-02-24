@@ -17,12 +17,13 @@ import kg.geeks.rickandmortywithjetpackcompose.ui.screens.favorite.FavoriteScree
 import kg.geeks.rickandmortywithjetpackcompose.ui.screens.favorite.FavoriteViewModel
 import kg.geeks.rickandmortywithjetpackcompose.ui.screens.location.LocationScreen
 import kg.geeks.rickandmortywithjetpackcompose.ui.screens.location.detail.LocationDetailScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
 
-    val favoriteViewModel: FavoriteViewModel = viewModel()
+    val favoriteViewModel: FavoriteViewModel = koinViewModel()
     val charactersViewModel: CharactersViewModel = viewModel()
 
     Scaffold(

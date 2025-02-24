@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,8 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil3.compose.rememberAsyncImagePainter
-import kg.geeks.rickandmortywithjetpackcompose.data.dto.character.CharacterResponseDto
+import coil.compose.rememberAsyncImagePainter
 import kg.geeks.rickandmortywithjetpackcompose.data.local.FavoriteCharacterEntity
 import kg.geeks.rickandmortywithjetpackcompose.ui.screens.favorite.FavoriteViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -37,60 +37,57 @@ fun CharacterScreen(
 ) {
     val characters = viewModel.charactersPager.collectAsLazyPagingItems()
 
-    when {
-        characters.loadState.refresh is LoadState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        items(count = characters.itemCount) { index ->
+            val character = characters[index]
+            character?.let {
+                CharacterItem(
+                    character = it,
+                    onClick = {
+                        navController.navigate("character_detail/${it.id}")
+                    },
+                    onLongClick = {
+                        favoriteViewModel.addCharacterToFavorites(it)
+                    }
+                )
             }
         }
-        characters.loadState.refresh is LoadState.Error -> {
-            val error = characters.loadState.refresh as LoadState.Error
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "Error loading characters: ${error.error.localizedMessage}")
-            }
-        }
-        else -> {
-            LazyColumn {
-                items(characters) {
-                    characters.let {
-                        CharacterItem(
-                            character = it,
-                            onClick = {
-                                navController.navigate("character_detail/${it.id}")
-                            },
-                            onLongClick = {
-                                val favoriteCharacterEntity = FavoriteCharacterEntity(
-                                    id = it.id,
-                                    name = it.name,
-                                    species = it.species,
-                                    image = it.image
-                                )
-                                favoriteViewModel.addCharacterToFavorites(favoriteCharacterEntity)
-                            }
+
+        characters.apply {
+            when {
+                loadState.refresh is LoadState.Loading -> {
+                    item {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+                loadState.refresh is LoadState.Error -> {
+                    val error = loadState.refresh as LoadState.Error
+                    item {
+                        Text(
+                            text = "Error loading characters: ${error.error.localizedMessage}",
+                            modifier = Modifier.padding(16.dp)
                         )
                     }
                 }
-
-                when (val appendState = characters.loadState.append) {
-                    is LoadState.Loading -> {
-                        item {
-                            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator()
-                            }
+                loadState.append is LoadState.Loading -> {
+                    item {
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator()
                         }
                     }
-                    is LoadState.Error -> {
-                        item {
-                            Text(text = "Error loading more characters: ${appendState.error.localizedMessage}")
-                        }
-                    }
-                    is LoadState.NotLoading -> {
+                }
+                loadState.append is LoadState.Error -> {
+                    val error = loadState.append as LoadState.Error
+                    item {
+                        Text(
+                            text = "Error loading more: ${error.error.localizedMessage}",
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
                 }
             }
@@ -100,26 +97,21 @@ fun CharacterScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CharacterItem(character: CharacterResponseDto.Character, onClick: () -> Unit, onLongClick: () -> Unit) {
+fun CharacterItem(
+    character: FavoriteCharacterEntity,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = onLongClick
-            )
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         val painter = rememberAsyncImagePainter(character.image)
-        Image(
-            painter = painter,
-            contentDescription = null,
-            modifier = Modifier.size(64.dp)
-        )
-
+        Image(painter = painter, contentDescription = null, modifier = Modifier.size(64.dp))
         Spacer(modifier = Modifier.width(16.dp))
-
         Column {
             Text(text = character.name, style = MaterialTheme.typography.titleLarge)
             Text(text = character.species, style = MaterialTheme.typography.titleMedium)

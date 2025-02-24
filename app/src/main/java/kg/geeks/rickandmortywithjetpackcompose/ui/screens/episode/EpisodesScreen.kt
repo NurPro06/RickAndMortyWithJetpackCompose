@@ -1,7 +1,9 @@
 package kg.geeks.rickandmortywithjetpackcompose.ui.screens.episode
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,38 +35,58 @@ fun EpisodeScreen(
     viewModel: EpisodesViewModel = koinViewModel()
 ) {
     val episodes = viewModel.episodesPager.collectAsLazyPagingItems()
-    val isLoading = remember { mutableStateOf(true) }
 
-
-    if (isLoading.value) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-    } else {
-        LazyColumn {
-            items(episodes) { episode ->
-                episode?.let {
-                    EpisodeItem(episode = it) {
-                        navController.navigate("episode_detail/${it.id}")
-                    }
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        items(count = episodes.itemCount) { index ->
+            val episode = episodes[index]
+            episode?.let {
+                EpisodeItem(episode = it) {
+                    navController.navigate("episode_detail/${it.id}")
                 }
             }
+        }
 
+        episodes.apply {
             when {
-                episodes.loadState.append is LoadState.Loading -> {
+                loadState.refresh is LoadState.Loading -> {
                     item {
-                        Box(modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
                             CircularProgressIndicator()
                         }
                     }
                 }
-                episodes.loadState.append is LoadState.Error -> {
+                loadState.append is LoadState.Loading -> {
                     item {
-                        Text(text = "Error loading more episodes")
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+                loadState.refresh is LoadState.Error -> {
+                    item {
+                        val e = loadState.refresh as LoadState.Error
+                        Text(
+                            text = "Ошибка загрузки: ${e.error.localizedMessage}",
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+                loadState.append is LoadState.Error -> {
+                    item {
+                        val e = loadState.append as LoadState.Error
+                        Text(
+                            text = "Ошибка загрузки дополнительных эпизодов: ${e.error.localizedMessage}",
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
                 }
             }
@@ -80,21 +102,19 @@ fun EpisodeItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             Text(
                 text = episode.name,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Row {
                 Text(
                     text = "Episode: ${episode.episode}",
@@ -106,9 +126,7 @@ fun EpisodeItem(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = "Characters: ${episode.characters.size}",
                 style = MaterialTheme.typography.bodySmall

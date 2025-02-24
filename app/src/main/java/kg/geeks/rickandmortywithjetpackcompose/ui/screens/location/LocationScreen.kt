@@ -23,7 +23,7 @@ import androidx.compose.material3.Text
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil3.compose.rememberAsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import kg.geeks.rickandmortywithjetpackcompose.data.dto.location.LocationResponseDto
 import org.koin.androidx.compose.koinViewModel
 
@@ -39,8 +39,9 @@ fun LocationScreen(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp)
     ) {
-        items(locations) { item ->
-            item?.let {
+        items(count = locations.itemCount) { index ->
+            val location = locations[index]
+            location?.let {
                 LocationItem(location = it) {
                     navController.navigate("location_detail/${it.id}")
                 }
@@ -59,7 +60,6 @@ fun LocationScreen(
                         }
                     }
                 }
-
                 loadState.append is LoadState.Loading -> {
                     item {
                         Box(
@@ -70,7 +70,6 @@ fun LocationScreen(
                         }
                     }
                 }
-
                 loadState.refresh is LoadState.Error -> {
                     val e = loadState.refresh as LoadState.Error
                     item {
@@ -96,9 +95,7 @@ fun LocationItem(location: LocationResponseDto.Location, onClick: () -> Unit) {
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val painter = rememberAsyncImagePainter(
-            model = location.imageUrl
-        )
+        val painter = rememberAsyncImagePainter(model = location.imageUrl)
         Image(
             painter = painter,
             contentDescription = null,
@@ -106,9 +103,7 @@ fun LocationItem(location: LocationResponseDto.Location, onClick: () -> Unit) {
             alignment = Alignment.Center,
             contentScale = androidx.compose.ui.layout.ContentScale.Crop
         )
-
         Spacer(modifier = Modifier.width(16.dp))
-
         Column {
             Text(
                 text = location.name,

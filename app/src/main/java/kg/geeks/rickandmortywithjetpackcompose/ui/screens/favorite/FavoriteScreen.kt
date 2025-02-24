@@ -23,7 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import kg.geeks.rickandmortywithjetpackcompose.data.local.FavoriteCharacterEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
