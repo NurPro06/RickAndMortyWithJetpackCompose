@@ -6,7 +6,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CharacterApiService {
-    @GET("character")
+    @GET("api/character")
     suspend fun fetchAllCharacters(
         @Query("page") page: Int,
         @Query("name") name: String? = null,
