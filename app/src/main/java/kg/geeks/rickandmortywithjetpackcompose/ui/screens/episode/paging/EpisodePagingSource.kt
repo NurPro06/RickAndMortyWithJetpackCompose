@@ -5,13 +5,20 @@ import androidx.paging.PagingState
 import kg.geeks.rickandmortywithjetpackcompose.data.api.EpisodesApiService
 import kg.geeks.rickandmortywithjetpackcompose.data.dto.episodes.EpisodesResponseDto
 
-class EpisodePagingSource(private val apiService: EpisodesApiService) : PagingSource<Int, EpisodesResponseDto.Episodes>() {
+class EpisodePagingSource(
+    private val apiService: EpisodesApiService,
+    private val name: String? = null,
+    private val episode: String? = null
+) : PagingSource<Int, EpisodesResponseDto.Episodes>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, EpisodesResponseDto.Episodes> {
         val position = params.key ?: 1
-
         return try {
-            val response = apiService.fetchAllEpisodes(position)
+            val response = apiService.fetchAllEpisodes(
+                page = position,
+                name = name,
+                episode = episode
+            )
             val episodes = response.episodesResults
 
             LoadResult.Page(

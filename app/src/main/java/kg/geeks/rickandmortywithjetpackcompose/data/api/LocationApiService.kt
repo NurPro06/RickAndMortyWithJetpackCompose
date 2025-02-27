@@ -8,7 +8,12 @@ import retrofit2.http.Query
 
 interface LocationApiService {
     @GET("location")
-    suspend fun fetchAllLocations(@Query("page") page: Int): LocationResponseDto
+    suspend fun fetchAllLocations(
+        @Query("page") page: Int,
+        @Query("name") name: String? = null,
+        @Query("type") type: String? = null,
+        @Query("dimension") dimension: String? = null
+    ): LocationResponseDto
 
     @GET("location/{id}")
     suspend fun fetchLocationById(@Path("id") locationId: Int): Response<LocationResponseDto.Location>

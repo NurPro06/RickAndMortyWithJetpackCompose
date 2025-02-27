@@ -22,8 +22,8 @@ import org.koin.androidx.compose.koinViewModel
 fun MainScreen() {
     val navController = rememberNavController()
 
-    val favoriteViewModel: FavoriteViewModel = koinViewModel() // Уже исправлено ранее
-    val charactersViewModel: CharactersViewModel = koinViewModel() // Исправляем здесь
+    val favoriteViewModel: FavoriteViewModel = koinViewModel()
+    val charactersViewModel: CharactersViewModel = koinViewModel()
 
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }

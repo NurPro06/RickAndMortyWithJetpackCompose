@@ -12,14 +12,32 @@ class LocationRepository(
     private val apiService: LocationApiService
 ) {
 
+    private var currentFilters = Filters()
+
+    data class Filters(
+        val name: String? = null,
+        val type: String? = null,
+        val dimension: String? = null
+    )
+
     fun getLocationsPager(): Flow<PagingData<LocationResponseDto.Location>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { LocationPagingSource(apiService) }
+            pagingSourceFactory = {
+                LocationPagingSource(apiService, currentFilters.name, currentFilters.type, currentFilters.dimension)
+            }
         ).flow
+    }
+
+    fun updateFilters(filters: Filters) {
+        currentFilters = filters
+    }
+
+    fun resetFilters() {
+        currentFilters = Filters()
     }
 
     suspend fun fetchLocationById(locationId: Int): LocationResponseDto.Location {

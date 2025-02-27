@@ -5,13 +5,22 @@ import androidx.paging.PagingState
 import kg.geeks.rickandmortywithjetpackcompose.data.api.LocationApiService
 import kg.geeks.rickandmortywithjetpackcompose.data.dto.location.LocationResponseDto
 
-class LocationPagingSource(private val apiService: LocationApiService) : PagingSource<Int, LocationResponseDto.Location>() {
+class LocationPagingSource(
+    private val apiService: LocationApiService,
+    private val name: String? = null,
+    private val type: String? = null,
+    private val dimension: String? = null
+) : PagingSource<Int, LocationResponseDto.Location>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LocationResponseDto.Location> {
         val position = params.key ?: 1
-
         return try {
-            val response = apiService.fetchAllLocations(position)
+            val response = apiService.fetchAllLocations(
+                page = position,
+                name = name,
+                type = type,
+                dimension = dimension
+            )
             val locations = response.locationResults
 
             LoadResult.Page(
