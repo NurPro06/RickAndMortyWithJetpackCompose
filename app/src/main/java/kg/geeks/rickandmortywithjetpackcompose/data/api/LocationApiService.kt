@@ -7,7 +7,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface LocationApiService {
-    @GET("location")
+    @GET("api/location")
     suspend fun fetchAllLocations(
         @Query("page") page: Int,
         @Query("name") name: String? = null,
