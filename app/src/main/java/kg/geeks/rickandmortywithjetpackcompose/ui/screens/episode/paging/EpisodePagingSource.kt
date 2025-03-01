@@ -1,5 +1,6 @@
 package kg.geeks.rickandmortywithjetpackcompose.ui.screens.episode.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kg.geeks.rickandmortywithjetpackcompose.data.api.EpisodesApiService
@@ -19,14 +20,15 @@ class EpisodePagingSource(
                 name = name,
                 episode = episode
             )
-            val episodes = response.episodesResults
-
+            val episodes = response.results
+            Log.d("EpisodePagingSource", "Loaded ${episodes.size} episodes for page $position")
             LoadResult.Page(
                 data = episodes,
                 prevKey = if (position == 1) null else position - 1,
                 nextKey = if (episodes.isEmpty()) null else position + 1
             )
         } catch (e: Exception) {
+            Log.e("EpisodePagingSource", "Error loading episodes", e)
             LoadResult.Error(e)
         }
     }

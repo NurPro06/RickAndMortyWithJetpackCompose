@@ -1,8 +1,9 @@
 package kg.geeks.rickandmortywithjetpackcompose.data.modules
 
 import androidx.room.Room
-import kg.geeks.rickandmortywithjetpackcompose.BuildConfig // Добавляем импорт
+import kg.geeks.rickandmortywithjetpackcompose.BuildConfig
 import kg.geeks.rickandmortywithjetpackcompose.data.api.CharacterApiService
+import kg.geeks.rickandmortywithjetpackcompose.data.api.EpisodesApiService
 import kg.geeks.rickandmortywithjetpackcompose.data.api.LocationApiService
 import kg.geeks.rickandmortywithjetpackcompose.data.local.AppDatabase
 import kg.geeks.rickandmortywithjetpackcompose.data.repository.CharacterRepository
@@ -22,6 +23,7 @@ val dataModule: Module = module {
     single { provideRetrofit(get()) }
     single { get<Retrofit>().create(CharacterApiService::class.java) }
     single { get<Retrofit>().create(LocationApiService::class.java) }
+    single { get<Retrofit>().create(EpisodesApiService::class.java) }
     single { get<AppDatabase>().favoriteCharacterDao() }
     single { CharacterRepository(get()) }
     single { LocationRepository(get()) }

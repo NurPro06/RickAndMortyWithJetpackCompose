@@ -106,4 +106,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Animation
+        implementation (libs.androidx.animation)
+        implementation (libs.accompanist.swiperefresh)
+        implementation (libs.material3)
+
 }

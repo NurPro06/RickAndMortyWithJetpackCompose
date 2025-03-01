@@ -1,5 +1,6 @@
 package kg.geeks.rickandmortywithjetpackcompose.ui.screens.location.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kg.geeks.rickandmortywithjetpackcompose.data.api.LocationApiService
@@ -21,14 +22,15 @@ class LocationPagingSource(
                 type = type,
                 dimension = dimension
             )
-            val locations = response.locationResults
-
+            val locations = response.results ?: emptyList()
+            Log.d("LocationPagingSource", "Page $position: Loaded ${locations.size} locations")
             LoadResult.Page(
                 data = locations,
                 prevKey = if (position == 1) null else position - 1,
                 nextKey = if (locations.isEmpty()) null else position + 1
             )
         } catch (e: Exception) {
+            Log.e("LocationPagingSource", "Error loading locations: ${e.message}", e)
             LoadResult.Error(e)
         }
     }

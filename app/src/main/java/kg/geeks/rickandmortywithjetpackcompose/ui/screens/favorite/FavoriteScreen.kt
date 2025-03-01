@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import kg.geeks.rickandmortywithjetpackcompose.data.local.FavoriteCharacterEntity
@@ -33,10 +34,21 @@ fun FavoriteScreen(viewModel: FavoriteViewModel) {
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            title = { Text(text = "Favorites") },
+            title = { Text(text = "Favorites") }
         )
 
         LazyColumn {
+            if (favoriteCharacters.value.isEmpty()) {
+                item {
+                    Text(
+                        text = "No favorite characters yet",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
             items(favoriteCharacters.value) { character ->
                 FavoriteCharacterItem(character, onLongClick = {
                     viewModel.removeCharacterFromFavorites(character)
